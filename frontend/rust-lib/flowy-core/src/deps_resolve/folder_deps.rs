@@ -17,6 +17,7 @@ use flowy_document2::parser::json::parser::JsonToDocumentParser;
 use flowy_error::FlowyError;
 use flowy_folder2::entities::ViewLayoutPB;
 use flowy_folder2::manager::{FolderManager, FolderUser};
+use flowy_folder2::search::FolderIndexStorage;
 use flowy_folder2::share::ImportType;
 use flowy_folder2::view_operation::{
   FolderOperationHandler, FolderOperationHandlers, View, WorkspaceViewBuilder,
@@ -37,12 +38,18 @@ impl FolderDepsResolver {
     folder_cloud: Arc<dyn FolderCloudService>,
   ) -> Arc<FolderManager> {
     let user: Arc<dyn FolderUser> = Arc::new(FolderUserImpl(user_manager.clone()));
-
+    let index_storage = FolderIndexStorageImpl(user_manager.clone());
     let handlers = folder_operation_handlers(document_manager.clone(), database_manager.clone());
     Arc::new(
-      FolderManager::new(user.clone(), collab_builder, handlers, folder_cloud)
-        .await
-        .unwrap(),
+      FolderManager::new(
+        user.clone(),
+        collab_builder,
+        handlers,
+        folder_cloud,
+        index_storage,
+      )
+      .await
+      .unwrap(),
     )
   }
 }
@@ -409,5 +416,17 @@ pub fn layout_type_from_view_layout(layout: ViewLayoutPB) -> DatabaseLayoutPB {
     ViewLayoutPB::Board => DatabaseLayoutPB::Board,
     ViewLayoutPB::Calendar => DatabaseLayoutPB::Calendar,
     ViewLayoutPB::Document => DatabaseLayoutPB::Grid,
+  }
+}
+
+struct FolderIndexStorageImpl(Weak<UserManager>);
+
+impl FolderIndexStorage for FolderIndexStorageImpl {
+  fn add(&self, id: &str, content: &str) {
+    todo!()
+  }
+
+  fn remove(&self, id: &str) {
+    todo!()
   }
 }
