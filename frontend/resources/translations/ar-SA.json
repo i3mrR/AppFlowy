@@ -109,6 +109,7 @@
     "feedback": "تعليق"
   },
   "menuAppHeader": {
+    "moreButtonToolTip": "حذف, أعادة تسمية, وأكثر",
     "addPageTooltip": "أضف صفحة في الداخل بسرعة",
     "defaultNewPageName": "بدون عنوان",
     "renameDialog": "إعادة تسمية"
